@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
+
+  <Product Id="682EDA41-CD07-463E-BFB6-89DA0278B10A"
+           Name="GP COLOMBIA Sql Setup"
+           Language="1033"
+           Version="3.0.0.0"
+           Manufacturer="JCF"
+           UpgradeCode="C59E4737-53A4-4458-B0CF-C717A1B880F4">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+    
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+    
+    <!-- Define Installation folder-->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="StartMenuFolder"/>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="MainDirectory" Name="Microsoft Dynamics">
+          <Directory Id="INSTALLFOLDER" Name="GP COLOMBIA Sql Setup">
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+
+    <!-- Define Installation components-->
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!--<Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabaseDyn" User="SQLUser" Server="[SQLSERVER]" Database="DYNAMICS" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes">
+          <sql:SqlScript Id="Createview01" BinaryKey="Createview01" ExecuteOnInstall="yes" Sequence="30" ContinueOnError="no"/>
+          <sql:SqlScript Id="Grants02" BinaryKey="Grants02" ExecuteOnInstall="yes" Sequence="1000" ContinueOnError="no"/>
+        </sql:SqlDatabase>
+      </Component>-->
+
+      <Component Id="PUCSqlComponent" Guid="7c32cf65-e060-4c7f-b5dd-d85c181da89c" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabase" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
+
+          <sql:SqlScript Id="CreatePcge01" BinaryKey="CreatePcge01" ExecuteOnInstall="yes" Sequence="95" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreatePcge10" BinaryKey="CreatePcge10" ExecuteOnInstall="yes" Sequence="200" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreatePcge20" BinaryKey="CreatePcge20" ExecuteOnInstall="yes" Sequence="250" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreatePcge30" BinaryKey="CreatePcge30" ExecuteOnInstall="yes" Sequence="300" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="GrantsPcge01" BinaryKey="GrantsPcge01" ExecuteOnInstall="yes" Sequence="350" ExecuteOnReinstall="yes"/>
+        </sql:SqlDatabase>
+      </Component>
+
+    </ComponentGroup>
+
+    <!--Install-->
+    <Feature Id="Complete" Title="GP COLOMBIA Sql Setup" Level="1" Description="Objetos sql" Display="expand" ConfigurableDirectory="INSTALLFOLDER">
+      <!--<Feature Id="SqlFeatureDyn" Title="Objetos Sql Dynamics" Description="Tablas, vistas y procedimientos almacenados de Dynamics." Level="1">
+        <ComponentRef Id="SqlComponentDyn" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>-->
+
+      <Feature Id="PUCSqlFeature" Title="Plan Unico de Cuentas" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="1">
+        <ComponentRef Id="PUCSqlComponent" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
+
+    </Feature>
+
+    <!--<Binary Id="CreateBase09" SourceFile="C:\jcTii\GPRelational\popVwPopRecepcionesHdr.view.sql"/>
+    <Binary Id="CreateCorrecc01" SourceFile="C:\jcTii\Desarrollo\PERU_localizacion\PERU_locAndinaCorrecciones\01_trgCreaRegistroImpositivo.create.GETTY.sql"/>-->
+
+    <Binary Id="CreatePcge01" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_puc\LAndinasql\01_tii_mapeo_PUC.table.view.sql"/>
+    <Binary Id="CreatePcge10" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_puc\LAndinasql\08_ActivaMapeo.sprocedure.sql"/>
+    <Binary Id="CreatePcge20" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_puc\LAndinasql\12_nsaPUC_GL10000.sql"/>
+    <Binary Id="CreatePcge30" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_puc\LAndinasql\13_tii_mapeo_puc.spDoodads.sql"/>
+    <Binary Id="GrantsPcge01" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_puc\LAndinasql\90_daPermisosARol_LAndinaMapeo.grant.sql"/>
+
+
+    <util:User Id="SQLUser" Name="[SQLUSER]" Password="[SQLPASSWORD]"></util:User>
+    <!--Variables SQL-->
+    <Property Id="SQLUSER">sa</Property>
+    <Property Id="SQLPASSWORD">password</Property>
+    <Property Id="SQLSERVER">servidor\instancia</Property>
+    <Property Id="SQLDATABASE">bd</Property>
+
+    <UI Id="MyWixUI_Mondo">
+      <UIRef Id="WixUI_Mondo"/>
+
+      <!--Pide valores para variables SQL-->
+      <DialogRef Id="UserRegistrationDlg"/>
+
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="UserRegistrationDlg" Order="4">WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="UserRegistrationDlg" Order="5">WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="UserRegistrationDlg" Order="5">WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="UserRegistrationDlg" Order="6">WixUI_InstallMode = "Change"</Publish>
+    </UI>
+
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+  </Product>
+</Wix>

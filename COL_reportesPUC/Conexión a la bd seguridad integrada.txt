@@ -1,0 +1,4 @@
+15/9/11 Conexión modificada para Perú y Colombia:
+
+Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Initial Catalog=GCOL;Data Source=GILABASRDB01;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=GILABASRAP01;Use Encryption for Data=False;Tag with column collation when possible=False
+

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<listaParametros>
+  <servidor>gtp-sql08v01</servidor>
+  <seguridadIntegrada>1</seguridadIntegrada>
+  <usuariosql>sa</usuariosql>
+  <passwordsql>na</passwordsql>
+  <companniaDefault>-</companniaDefault>
+  <compannia bd="LA149">
+	<estructuraPlanLocal tipo="default">
+      <Parametro>
+        <Nivel>1</Nivel>
+        <Descripcion>Elemento</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>2</Nivel>
+        <Descripcion>Cuenta</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>3</Nivel>
+        <Descripcion>Subcuenta</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>4</Nivel>
+        <Descripcion>Divisionaria</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>5</Nivel>
+        <Descripcion>Subdivisionaria</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>7</Nivel>
+        <Descripcion>Subdivisionaria3</Descripcion>
+      </Parametro>
+	</estructuraPlanLocal>
+  <formatoCuentaGP>AAAA-__-__-____-____-AAAA [Él código A es reemplazado por los dígitos de la cuenta contable de GP]</formatoCuentaGP>
+  <nivelMinAsignacion>4</nivelMinAsignacion>
+	<cuentasGasto>5</cuentasGasto>
+	<segmentoContable>[El mapeo es por segmento contable de GP? 0:no, 1:sí]</segmentoContable>
+	<pais>PERU</pais>
+  </compannia>
+  <compannia bd="TPERU">
+	<estructuraPlanLocal tipo="default">
+      <Parametro>
+        <Nivel>1</Nivel>
+        <Descripcion>Elemento</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>2</Nivel>
+        <Descripcion>Cuenta</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>3</Nivel>
+        <Descripcion>Subcuenta</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>4</Nivel>
+        <Descripcion>Divisionaria</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>5</Nivel>
+        <Descripcion>Subdivisionaria</Descripcion>
+      </Parametro>
+      <Parametro>
+        <Nivel>7</Nivel>
+        <Descripcion>Subdivisionaria3</Descripcion>
+      </Parametro>
+	</estructuraPlanLocal>
+  <formatoCuentaGP>AAAA-__-__-____-____-AAAA</formatoCuentaGP>
+  <nivelMinAsignacion>4</nivelMinAsignacion>
+	<cuentasGasto>5</cuentasGasto>
+	<segmentoContable>0</segmentoContable>
+	<pais>PERU</pais>
+  </compannia>
+</listaParametros>

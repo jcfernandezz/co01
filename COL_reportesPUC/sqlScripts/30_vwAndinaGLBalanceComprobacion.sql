@@ -281,7 +281,7 @@ outer apply (
 		from dbo.f_LocandinaGLSaldosPucYTerceros (pr.PERIODID)
 		) pyt
 where pr.FORIGIN = 1
-and pr.YEAR1 = 2009
+and pr.YEAR1 = year(getdate())
 and pr.SERIES = 0
 and pr.ODESCTN = ''
 and pr.PERIODID > 0
@@ -348,7 +348,7 @@ outer apply (
 		from dbo.f_LocAndinaGLSaldosPucTercerosYTrx(pr.PERIODID)
 		) pyt
 where pr.FORIGIN = 1
-and pr.YEAR1 = 2009
+and pr.YEAR1 = year(getdate())
 and pr.SERIES = 0
 and pr.ODESCTN = ''
 and pr.PERIODID > 0

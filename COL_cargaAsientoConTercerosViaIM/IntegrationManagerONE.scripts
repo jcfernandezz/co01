@@ -1,0 +1,89 @@
+'BEFORE INTEGRATION
+'Propósito. Abre el archivo de datos y realiza validaciones básicas línea a línea
+'Requisito. El id de tercero debe estar en la cuarta columna del archivo glline.txt
+'26/08/19 JCF Creación
+
+Dim pFSO, t, pConn, pRS, pArchivo
+Dim vec, l_fila, l_tipo, separador
+Dim sSourceFile, l_fileName, linea, strCons, C
+
+l_fileName = "glline.txt"
+l_tipo = "1"
+sSourceFile = "C:\ONEDATA\"
+SetVariable "fileName", l_fileName
+
+Set pArchivo = CreateObject("Scripting.FileSystemObject")
+If Not pArchivo.FileExists(sSourceFile & l_fileName ) then
+     msgbox "El archivo " & l_fileName & " no existe en: " & sSourceFile 
+     CancelIntegration 
+Else
+     SetVariable "sSourceFile", sSourceFile
+End If
+
+set pFSO = CreateObject("Scripting.FileSystemObject")
+set t=pFSO.OpenTextFile(sSourceFile & l_fileName , 1, false)
+C = Chr(39)
+separador = Chr(9)
+
+'Abre la conexión con la base de datos
+set pConn =CreateObject("ADODB.Connection")
+pConn.Connectionstring = "database=" + GPConnection.GPConnInterCompanyID
+GPConnection.Open(pConn)
+
+'La primera fila es de títulos.
+linea = t.ReadLine
+linea = t.ReadLine
+l_fila = 2
+while not t.atendofstream
+    vec = split(linea, separador)
+    strTercero = trim(CStr(vec(3)))
+
+    strCons = "exec dbo.spLocColExisteProveedor " & _
+	          C & trim(strTercero) & C & "," & _
+	          C & l_tipo & C & "," & _
+              C & l_fila & C
+    pRS = pConn.Execute(strCons )
+	   
+    linea = t.ReadLine
+    l_fila = l_fila +1
+wend
+
+pConn.Close
+t.close
+
+
+============================================================================================================
+'AFTER DOCUMENT
+
+'Propósito. Inserta terceros
+'27/08/19 JCF Creación
+Dim pFSO, t, pConn, pRS
+Dim vec, separador
+Dim l_fileName, linea, strCons, C 
+
+l_fileName = GetVariable ("fileName")
+
+set pFSO = CreateObject("Scripting.FileSystemObject")
+set t=pFSO.OpenTextFile(GetVariable ("sSourceFile") & l_fileName, 1, false)
+C = Chr(39)
+separador = Chr(9)
+
+set pConn =CreateObject("ADODB.Connection")
+pConn.Connectionstring = "database=" + GPConnection.GPConnInterCompanyID
+GPConnection.Open(pConn)
+
+linea = t.ReadLine
+vec = split(linea, separador)
+
+strCons = "exec spLocColCargaTerceroDesdeAsiento " & _
+          C & DestinationFields("Batch ID") & C & "," & _
+          C & "GL_Normal" & C & "," & _
+          C & "GJ" & C 
+
+pRS = pConn.Execute(strCons )
+
+pConn.Close
+Set pConn = Nothing
+t.close
+
+======================================================================================================

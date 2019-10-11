@@ -1,0 +1,9 @@
+Carga de asiento contable vía IM incluyendo terceros
+
+Instalación
+--------------------------------
+Ejecutar los sql scripts
+Los archivos texto deben estar en C:\ONEDATA\
+Los nombres de los archivos deben ser: glline.txt, glheader.txt
+El archivo glline.txt debe contener el Id del tercero en la cuarta columna
+

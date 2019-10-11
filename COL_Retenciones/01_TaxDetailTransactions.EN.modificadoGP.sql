@@ -1,13 +1,13 @@
-USE [OEFC]
-GO
-
-/****** Object:  View [dbo].[TaxDetailTransactions]    Script Date: 7/11/2019 3:46:45 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER OFF
 GO
+IF (OBJECT_ID ('dbo.TaxDetailTransactions', 'V') IS NULL)
+   exec('create view dbo.TaxDetailTransactions as SELECT 1 as t');
+go
 
+--11/10/19 jcf Agrega tipo de impuesto (address1)
 ALTER VIEW [dbo].[TaxDetailTransactions] AS 
 SELECT rtrim(['Tax History'].[TAXDTLID]) AS 'Tax Detail ID',
        rtrim(['Sales/Purchases Tax Master'].[TXDTLDSC]) AS 'Tax Detail Description',
@@ -48,7 +48,9 @@ SELECT rtrim(['Tax History'].[TAXDTLID]) AS 'Tax Detail ID',
        'Account Number For Drillback' = 'dgpp://DGPB/?Db=&Srv=OEF-SQL1&Cmp=OEFC&Prod=0' +dbo.dgppAccountIndex(1, ['Tax History'].[ACTINDX]),
        'Customer Number For Drillback' = 'dgpp://DGPB/?Db=&Srv=OEF-SQL1&Cmp=OEFC&Prod=0' +dbo.dgppCustomerID(1, ['RM Customer MSTR'].[CUSTNMBR]),
        'Vendor ID For Drillback' = 'dgpp://DGPB/?Db=&Srv=OEF-SQL1&Cmp=OEFC&Prod=0' +dbo.dgppVendorID(1, ['PM Vendor Master File'].[VENDORID]),
-	   ['Sales/Purchases Tax Master'].TXDTLPCH
+	   ['Sales/Purchases Tax Master'].TXDTLPCH,
+	   ['Sales/Purchases Tax Master'].ADDRESS1,
+	   ['Sales/Purchases Tax Master'].ADDRESS2
 FROM [TX30000] AS ['Tax History'] WITH (NOLOCK)
 LEFT OUTER JOIN [TX00201] AS ['Sales/Purchases Tax Master'] WITH (NOLOCK) ON ['Tax History'].[TAXDTLID] = ['Sales/Purchases Tax Master'].[TAXDTLID]
 LEFT OUTER JOIN [PM00200] AS ['PM Vendor Master File'] WITH (NOLOCK) ON ['Tax History'].[CustomerVendor_ID] = ['PM Vendor Master File'].[VENDORID]
@@ -56,5 +58,8 @@ LEFT OUTER JOIN [RM00101] AS ['RM Customer MSTR'] WITH (NOLOCK) ON ['Tax History
 
 go
 
+IF (@@Error = 0) PRINT 'Creación exitosa de: [dbo].[TaxDetailTransactions]'
+ELSE PRINT 'Error en la creación de: [dbo].[TaxDetailTransactions]'
+GO
 
 

@@ -21,7 +21,7 @@ return
 		rtrim(ns.Fname) +' '+ rtrim(ns.Oname) +' '+ rtrim(ns.Fsurname) +' '+ rtrim(ns.Ssurname) Rsocial,
 		ns.nsaIF_Site_Code,
 		case when isnull(ns.nsaIF_Site_Code, '') = '' then
-			left(@STATE, 2) 
+			left(@CITY, 2) 
 		else left(ns.nsaIF_Site_Code, 2)
 		end dptoCode,
 		case when isnull(ns.nsaIF_Site_Code, '') = '' then

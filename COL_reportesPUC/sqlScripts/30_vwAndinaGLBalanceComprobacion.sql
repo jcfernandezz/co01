@@ -8,10 +8,11 @@ GO
 create function dbo.f_LocandinaGLSaldosPucYTerceros (@p_mes smallint)
 returns table 
 --Propósito. Obtiene los saldos contables por cuenta puc y tercero
---1/7/10 JCF Creación
---15/7/10 JCF Agrega saldos iniciales y finales para cada mes
---20/7/10 JCF Agrega campo USRDEFS1
---09/4/13 jcf Agrega dirección de terceros
+--01/07/10 JCF Creación
+--15/07/10 JCF Agrega saldos iniciales y finales para cada mes
+--20/07/10 JCF Agrega campo USRDEFS1
+--09/04/13 jcf Agrega dirección de terceros
+--08/10/19 jcf Agraga más datos de terceros
 --
 as return (
 select 	@p_mes mes,
@@ -24,6 +25,14 @@ select 	@p_mes mes,
 	case when cs.nsaIFNit='' then cs.ormstrid else cs.nsaIFNit end registroDeImpuesto, cs.nsaIFNit NIT, cs.nsaIF_Type_Nit tipoNIT, 
 	cs.ORMSTRID idMaestro, rtrim(cs.ORMSTRNM) nombreMaestroOriginal,
 	dt.ADDRESS1, dt.ADDRESS2, dt.ADDRESS3, dt.CITY, dt.[STATE], dt.ZIPCODE, dt.COUNTRY, 
+	dt.nsaif_type_nit,
+	dt.nsaIfNitSinDV,
+	dt.digitoVerificador,
+	dt.nsaIfnit, 
+	dt.Fname,
+	dt.Oname, 
+	dt.Fsurname,
+	dt.Ssurname,
 	case when @p_mes = 1 then 	cs.nsaIF_SI_1
 		when @p_mes = 2 then 	cs.nsaIF_SI_2
 		when @p_mes = 3 then 	cs.nsaIF_SI_3
@@ -236,16 +245,25 @@ go
 ALTER view dbo.vwLocAndinaGLSaldosPucYTerceros as
 --Propósito. Localización andina. Saldos mensuales agrupados por cuenta PUC y terceros
 --Utilizado por. Planilla excel
---6/7/10 JCF Creación
---15/7/10 JCF Modifica consulta para usar sy_period_setp
---20/7/10 JCF Agrega USRDEFS1
+--06/07/10 JCF Creación
+--15/07/10 JCF Modifica consulta para usar sy_period_setp
+--20/07/10 JCF Agrega USRDEFS1
 --09/04/13 jcf Agrega dirección de terceros
+--08/10/19 jcf Agrega más datos de terceros
 --
 select pr.PERIODID, pr.PERNAME Mes,
 	pyt.puc_y_desc1,pyt.puc_y_desc2,pyt.puc_y_desc4,pyt.puc_y_desc6,pyt.puc_y_desc,
 	pyt.añoAbierto,pyt.ACTINDX,pyt.compañía,pyt.brand,pyt.cuentaContable,pyt.númeroCuenta,pyt.descripciónDeCuenta,
 	pyt.registroDeImpuesto, pyt.NIT, pyt.tipoNIT,pyt.idMaestro,pyt.nombreMaestroOriginal,	
 	pyt.ADDRESS1, pyt.ADDRESS2, pyt.ADDRESS3, pyt.CITY, pyt.[STATE], pyt.ZIPCODE, pyt.COUNTRY ,
+	pyt.nsaif_type_nit,
+	pyt.nsaIfNitSinDV,
+	pyt.digitoVerificador,
+	pyt.nsaIfnit, 
+	pyt.Fname,
+	pyt.Oname, 
+	pyt.Fsurname,
+	pyt.Ssurname,
 	pyt.SaldoAnterior,pyt.Débitos,pyt.Créditos,pyt.SaldoFinal,	
 	case when pr.PERIODID = 1 then pyt.SaldoAntEnero else 0 end SaldoAnt_Enero,
 	case when pr.PERIODID = 2 then 	pyt.SaldoAntFebrero else 0 end SaldoAnt_Febrero ,
@@ -281,7 +299,7 @@ outer apply (
 		from dbo.f_LocandinaGLSaldosPucYTerceros (pr.PERIODID)
 		) pyt
 where pr.FORIGIN = 1
-and pr.YEAR1 = 2009
+and pr.YEAR1 = year(getdate())
 and pr.SERIES = 0
 and pr.ODESCTN = ''
 and pr.PERIODID > 0
@@ -348,7 +366,7 @@ outer apply (
 		from dbo.f_LocAndinaGLSaldosPucTercerosYTrx(pr.PERIODID)
 		) pyt
 where pr.FORIGIN = 1
-and pr.YEAR1 = 2009
+and pr.YEAR1 = year(getdate())
 and pr.SERIES = 0
 and pr.ODESCTN = ''
 and pr.PERIODID > 0

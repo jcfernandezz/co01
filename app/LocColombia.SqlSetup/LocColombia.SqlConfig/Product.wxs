@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
+	<Product Id="A17B4FB7-A28E-4FFA-89B6-2B2644BA0DAA" Name="Colombia Localización Sql Config" Language="1033" Version="1.0.0.0" Manufacturer="jcf" UpgradeCode="15a54dc7-0fe0-42b7-9115-a007091ff28c">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+    <Feature Id="Complete" Title="Colombia Localización Sql Config" Level="1" Description="Objetos sql" Display="expand" ConfigurableDirectory="INSTALLFOLDER">
+      <Feature Id="SqlFeatureRepoPUC" Title="Reportes PUC - Objetos Sql" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="1">
+        <ComponentRef Id="SqlComponentRepoPUC" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
+      <Feature Id="SqlFeatureCertRete" Title="Certificado de Retenciones - Objetos Sql" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="1">
+        <ComponentRef Id="SqlComponentCertRete" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
+      <Feature Id="SqlFeatureMedMag" Title="Medios Magnéticos - Objetos Sql" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="1">
+        <ComponentRef Id="SqlComponentMedMag" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
+      <Feature Id="SqlFeatureCorrTer" Title="Corrección de Terceros - Objetos Sql" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="1">
+        <ComponentRef Id="SqlComponentCorrTer" />
+        <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
+    </Feature>
+
+    <util:User Id="SQLUser" Name="[SQLUSER]" Password="[SQLPASSWORD]"></util:User>
+    <!--Variables SQL-->
+    <Property Id="SQLUSER">sa</Property>
+    <Property Id="SQLPASSWORD">password</Property>
+    <Property Id="SQLSERVER">servidor\instancia</Property>
+    <Property Id="SQLDATABASE">bd</Property>
+
+    <UI Id="MyWixUI_Mondo">
+      <UIRef Id="WixUI_Mondo"/>
+
+      <!--Pide valores para variables SQL-->
+      <DialogRef Id="UserRegistrationDlg"/>
+
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="UserRegistrationDlg" Order="4">WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="UserRegistrationDlg" Order="5">WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="UserRegistrationDlg" Order="5">WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="UserRegistrationDlg" Order="6">WixUI_InstallMode = "Change"</Publish>
+    </UI>
+
+    <UIRef Id="WixUI_ErrorProgressText" />
+  </Product>
+
+	<Fragment>
+    <!-- Define Installation folder-->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="StartMenuFolder"/>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="MainDirectory" Name="Microsoft Dynamics">
+          <Directory Id="INSTALLFOLDER" Name="Colombia Localización v1.0.0 Sql Config">
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+	<Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="SqlComponentRepoPUC" Guid="9AB058C2-65D7-4BAF-B742-7A5CD0B925E3" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabase10" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
+          <sql:SqlScript Id="CreateObj010" BinaryKey="CreateObj010" ExecuteOnInstall="yes" Sequence="10" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj020" BinaryKey="CreateObj020" ExecuteOnInstall="yes" Sequence="20" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj030" BinaryKey="CreateObj030" ExecuteOnInstall="yes" Sequence="30" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj040" BinaryKey="CreateObj040" ExecuteOnInstall="yes" Sequence="40" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj050" BinaryKey="CreateObj050" ExecuteOnInstall="yes" Sequence="50" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj060" BinaryKey="CreateObj060" ExecuteOnInstall="yes" Sequence="60" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj070" BinaryKey="CreateObj070" ExecuteOnInstall="yes" Sequence="70" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj080" BinaryKey="CreateObj080" ExecuteOnInstall="yes" Sequence="80" ExecuteOnReinstall="yes"/>
+        </sql:SqlDatabase>
+      </Component>
+
+      <Component Id="SqlComponentCertRete" Guid="70294A3F-8822-4DD2-8337-8274271FC022" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabase20" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
+          <sql:SqlScript Id="CreateObj110" BinaryKey="CreateObj110" ExecuteOnInstall="yes" Sequence="110" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj120" BinaryKey="CreateObj120" ExecuteOnInstall="yes" Sequence="120" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj130" BinaryKey="CreateObj130" ExecuteOnInstall="yes" Sequence="130" ExecuteOnReinstall="yes"/>
+        </sql:SqlDatabase>
+      </Component>
+
+      <Component Id="SqlComponentMedMag" Guid="88FA3804-C4DB-4D9A-8DFC-4F08A570A30B" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabase30" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
+          <sql:SqlScript Id="CreateObj210" BinaryKey="CreateObj210" ExecuteOnInstall="yes" Sequence="210" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj215" BinaryKey="CreateObj215" ExecuteOnInstall="yes" Sequence="215" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj220" BinaryKey="CreateObj220" ExecuteOnInstall="yes" Sequence="220" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj230" BinaryKey="CreateObj230" ExecuteOnInstall="yes" Sequence="230" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj240" BinaryKey="CreateObj240" ExecuteOnInstall="yes" Sequence="240" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj250" BinaryKey="CreateObj250" ExecuteOnInstall="yes" Sequence="250" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj260" BinaryKey="CreateObj260" ExecuteOnInstall="yes" Sequence="260" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj270" BinaryKey="CreateObj270" ExecuteOnInstall="yes" Sequence="270" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj280" BinaryKey="CreateObj280" ExecuteOnInstall="yes" Sequence="280" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj290" BinaryKey="CreateObj290" ExecuteOnInstall="yes" Sequence="290" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj300" BinaryKey="CreateObj300" ExecuteOnInstall="yes" Sequence="300" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj310" BinaryKey="CreateObj310" ExecuteOnInstall="yes" Sequence="310" ExecuteOnReinstall="yes"/>
+        </sql:SqlDatabase>
+      </Component>
+
+      <Component Id="SqlComponentCorrTer" Guid="55004AA0-B933-451A-9E49-9CE7CECAFFD8" KeyPath="yes">
+        <sql:SqlDatabase Id="SqlDatabase40" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
+          <sql:SqlScript Id="CreateObj410" BinaryKey="CreateObj410" ExecuteOnInstall="yes" Sequence="410" ExecuteOnReinstall="yes"/>
+        </sql:SqlDatabase>
+      </Component>
+    </ComponentGroup>
+    
+    <Binary Id="CreateObj010" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\00_Base_fnLocColombiaDatosCliente.function.sql"/>
+    <Binary Id="CreateObj020" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\05_InsertaCiudadesYDepartamentos.insert.sql"/>
+    <Binary Id="CreateObj030" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\07_trgCreaRegistroImpositivo.create.sql"/>
+    <Binary Id="CreateObj040" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\10_vwGLCuentasPucyGP.sql"/>
+    <Binary Id="CreateObj050" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\15_f_obtieneDatosTerceros.function.sql"/>
+    <Binary Id="CreateObj060" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\18_vwLocAndinaGLLibroDiario.view.sql"/>
+    <Binary Id="CreateObj070" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\30_vwAndinaGLBalanceComprobacion.sql"/>
+    <Binary Id="CreateObj080" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_reportesPUC\sqlScripts\40_LocAndinaGL.grant.sql"/>
+
+    <Binary Id="CreateObj110" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_Retenciones\01_TaxDetailTransactions.EN.modificadoGP.sql"/>
+    <Binary Id="CreateObj120" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_Retenciones\10_vwColCertificadoRetenciones.EN.view.sql"/>
+    <Binary Id="CreateObj130" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_Retenciones\90_ColLocalizaciondaPermisos.grant.sql"/>
+
+    <Binary Id="CreateObj210" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\000_synonymsGPDynamics.synonym.sql"/>
+    <Binary Id="CreateObj215" SourceFile="C:\jcTii\GPRelational\pmVwTransaccionesTodas.view.sql"/>
+    <Binary Id="CreateObj220" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\001_fnColParametros.function.sql"/>
+    <Binary Id="CreateObj230" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\014_fnColMedMagneticosPmImpuestoTAH.function.sql"/>
+    <Binary Id="CreateObj240" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\016_fnColMediosMagneticosDatosComprobanteAP.function.sql"/>
+    <Binary Id="CreateObj250" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\020_vwColMediosMagneticosFacturasCompras.view.sql"/>
+    <Binary Id="CreateObj260" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\025_vwColMediosMagneticos1001PagosEnCuentaYRetenciones.view.sql"/>
+    <Binary Id="CreateObj270" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\030_spColBaseSaldosARAgrupadoXCliente.sprocedure.sql"/>
+    <Binary Id="CreateObj280" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\035_spColMediosMagneticos1008SaldosAR.sql"/>
+    <Binary Id="CreateObj290" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\040_spColBaseSaldosAPAgrupadoXProveedor.sprocedure.sql"/>
+    <Binary Id="CreateObj300" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\045_spColMediosMagneticos1009SaldosAP.sql"/>
+    <Binary Id="CreateObj310" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_MediosMagneticos\sql\099_MediosMagneticos.grant.sql"/>
+
+    <Binary Id="CreateObj410" SourceFile="C:\jcTii\Desarrollo\COL_Localizacion\co01\COL_corrigeTerceroEnAsientoFin\10_locColActualizaTerceroEnAsientoFin.sprocedure.sql"/>
+
+  </Fragment>
+</Wix>
